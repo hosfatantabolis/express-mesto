@@ -1,6 +1,7 @@
 dist
-.editorconfig
+public
 .eslintrc
+.eslintignore
 
 # Logs
 logs
