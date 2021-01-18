@@ -1,6 +1,4 @@
 dist
-public
-.eslintrc
 .eslintignore
 
 # Logs

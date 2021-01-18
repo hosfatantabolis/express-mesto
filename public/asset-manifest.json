@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.496e3bcc.chunk.css",
+    "main.js": "/static/js/main.f48373e7.chunk.js",
+    "main.js.map": "/static/js/main.f48373e7.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.9443b389.js",
+    "runtime-main.js.map": "/static/js/runtime-main.9443b389.js.map",
+    "static/js/2.8d785167.chunk.js": "/static/js/2.8d785167.chunk.js",
+    "static/js/2.8d785167.chunk.js.map": "/static/js/2.8d785167.chunk.js.map",
+    "static/js/3.01b8cd17.chunk.js": "/static/js/3.01b8cd17.chunk.js",
+    "static/js/3.01b8cd17.chunk.js.map": "/static/js/3.01b8cd17.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.496e3bcc.chunk.css.map": "/static/css/main.496e3bcc.chunk.css.map",
+    "static/js/2.8d785167.chunk.js.LICENSE.txt": "/static/js/2.8d785167.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/like-button_active.a7ffe37d.svg",
+    "static/media/logo-light.c2821b38.svg": "/static/media/logo-light.c2821b38.svg",
+    "static/media/spinner.7cbcce72.gif": "/static/media/spinner.7cbcce72.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9443b389.js",
+    "static/js/2.8d785167.chunk.js",
+    "static/css/main.496e3bcc.chunk.css",
+    "static/js/main.f48373e7.chunk.js"
+  ]
+}
