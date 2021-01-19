@@ -1,16 +1,25 @@
 const usersRouter = require('express').Router();
-const users = require('../data/users.json');
+const fsPromises = require('fs').promises;
+const path = require('path');
 
 const badResponse = { message: 'Нет пользователя с таким id' };
-usersRouter.get('/', (req, res) => res.status(200).send(users));
-usersRouter.get('/:id', (req, res) => {
-  const user = users.find((item) => item._id === req.params.id);
-  if (!user) {
-    res.status(404).send(badResponse);
-  } else {
-    console.log(user);
-    res.status(200).send(user);
-  }
-});
+const filepath = path.resolve(__dirname, '../data/users.json');
+
+fsPromises
+  .readFile(filepath, { encoding: 'utf8' })
+  .then((data) => {
+    usersRouter.get('/', (req, res) => res.status(200).send(data));
+    usersRouter.get('/:id', (req, res) => {
+      const user = JSON.parse(data).find((item) => item._id === req.params.id);
+      if (!user) {
+        res.status(404).send(badResponse);
+      } else {
+        res.status(200).send(user);
+      }
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 module.exports = usersRouter;
