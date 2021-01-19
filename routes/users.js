@@ -8,7 +8,7 @@ const filepath = path.resolve(__dirname, '../data/users.json');
 fsPromises
   .readFile(filepath, { encoding: 'utf8' })
   .then((data) => {
-    usersRouter.get('/', (req, res) => res.status(200).send(data));
+    usersRouter.get('/', (req, res) => res.status(200).send(JSON.parse(data)));
     usersRouter.get('/:id', (req, res) => {
       const user = JSON.parse(data).find((item) => item._id === req.params.id);
       if (!user) {
