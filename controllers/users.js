@@ -1,7 +1,10 @@
 const User = require('../models/user');
 
-const badResponse = { message: 'Нет пользователя с таким id' };
-const serverError = { message: 'Ошибка на сервере. Код: 500' };
+const {
+  VALIDATION_ERROR,
+  SERVER_ERROR,
+  USER_NOT_FOUND,
+} = require('../utils/error_messages');
 
 const getUsers = (req, res) => {
   User.find()
@@ -9,23 +12,23 @@ const getUsers = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send(serverError);
+      console.log(err.name);
+      res.status(500).send(SERVER_ERROR);
     });
 };
 
 const getUserById = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (!user) {
-        res.status(404).send(badResponse);
-      } else {
-        res.send(user);
-      }
+      res.send(user);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send(serverError);
+      console.log(err.name);
+      if (err.name === 'CastError') {
+        res.status(404).send(USER_NOT_FOUND);
+      } else {
+        res.status(500).send(SERVER_ERROR);
+      }
     });
 };
 
@@ -36,8 +39,12 @@ const postUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send(serverError);
+      if (err.name === 'ValidationError') {
+        res.status(400).send(VALIDATION_ERROR);
+      } else {
+        res.status(500).send(SERVER_ERROR);
+      }
+      console.log(err.name);
     });
 };
 
@@ -49,20 +56,21 @@ const updateUserInfo = (req, res) => {
     {
       new: true,
       runValidators: true,
-      // eslint-disable-next-line comma-dangle
-    }
+    },
   )
     .then((user) => {
-      console.log(user);
-      if (!user) {
-        res.status(404).send(badResponse);
-      } else {
-        res.send(user);
-      }
+      res.send(user);
     })
     .catch((err) => {
-      res.status(500).send(serverError);
-      console.log(err);
+      if (err.name === 'ValidationError') {
+        res.status(400).send(VALIDATION_ERROR);
+      }
+      if (err.name === 'CastError') {
+        res.status(404).send(USER_NOT_FOUND);
+      } else {
+        res.status(500).send(SERVER_ERROR);
+      }
+      console.log(err.name);
     });
 };
 
@@ -74,20 +82,21 @@ const updateUserAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-      // eslint-disable-next-line comma-dangle
-    }
+    },
   )
     .then((user) => {
-      console.log(user);
-      if (!user) {
-        res.status(404).send(badResponse);
-      } else {
-        res.send(user);
-      }
+      res.send(user);
     })
     .catch((err) => {
-      res.status(500).send(serverError);
-      console.log(err);
+      if (err.name === 'ValidationError') {
+        res.status(400).send(VALIDATION_ERROR);
+      }
+      if (err.name === 'CastError') {
+        res.status(404).send(USER_NOT_FOUND);
+      } else {
+        res.status(500).send(SERVER_ERROR);
+      }
+      console.log(err.name);
     });
 };
 

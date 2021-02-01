@@ -1,5 +1,5 @@
 const invalidRouter = require('express').Router();
+const { INVALID_URL } = require('../utils/error_messages');
 
-const invalidURL = { message: 'Запрашиваемый ресурс не найден' };
-invalidRouter.get('/', (req, res) => res.status(404).send(invalidURL));
+invalidRouter.get('/', (req, res) => res.status(404).send(INVALID_URL));
 module.exports = invalidRouter;
