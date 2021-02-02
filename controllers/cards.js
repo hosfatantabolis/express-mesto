@@ -10,8 +10,7 @@ const getCards = (req, res) => {
     .then((data) => {
       res.send(data);
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
       res.status(500).send(SERVER_ERROR);
     });
 };
@@ -34,7 +33,11 @@ const postCard = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
-      res.send(card);
+      if (!card) {
+        res.status(404).send(CARD_NOT_FOUND);
+      } else {
+        res.send(card);
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -52,7 +55,11 @@ const likeCard = (req, res) => {
     { new: true },
   )
     .then((data) => {
-      res.send(data);
+      if (!data) {
+        res.status(404).send(CARD_NOT_FOUND);
+      } else {
+        res.send(data);
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -69,7 +76,11 @@ const dislikeCard = (req, res) => {
     { new: true },
   )
     .then((data) => {
-      res.send(data);
+      if (!data) {
+        res.status(404).send(CARD_NOT_FOUND);
+      } else {
+        res.send(data);
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {

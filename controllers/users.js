@@ -11,8 +11,7 @@ const getUsers = (req, res) => {
     .then((data) => {
       res.send(data);
     })
-    .catch((err) => {
-      console.log(err.name);
+    .catch(() => {
       res.status(500).send(SERVER_ERROR);
     });
 };
@@ -20,10 +19,13 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
-      res.send(user);
+      if (!user) {
+        res.status(404).send(USER_NOT_FOUND);
+      } else {
+        res.send(user);
+      }
     })
     .catch((err) => {
-      console.log(err.name);
       if (err.name === 'CastError') {
         res.status(404).send(USER_NOT_FOUND);
       } else {
@@ -44,7 +46,6 @@ const postUser = (req, res) => {
       } else {
         res.status(500).send(SERVER_ERROR);
       }
-      console.log(err.name);
     });
 };
 
@@ -70,7 +71,6 @@ const updateUserInfo = (req, res) => {
       } else {
         res.status(500).send(SERVER_ERROR);
       }
-      console.log(err.name);
     });
 };
 
@@ -96,7 +96,6 @@ const updateUserAvatar = (req, res) => {
       } else {
         res.status(500).send(SERVER_ERROR);
       }
-      console.log(err.name);
     });
 };
 
