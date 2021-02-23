@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const errorHandler = require('./middlewares/errorHandler.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+require('dotenv').config();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -20,16 +23,19 @@ const router = require('./routes/index.js');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '601335c5ee23ea362c89dc18',
-  };
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '601335c5ee23ea362c89dc18',
+//   };
 
-  next();
-});
+//   next();
+// });
 
 app.use(bodyParser.json());
+app.use(requestLogger);
 app.use(router);
+app.use(errorLogger);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

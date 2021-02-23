@@ -1,55 +1,53 @@
 const User = require('../models/user');
+const { NotFound } = require('../utils/errors');
 
 const {
-  VALIDATION_ERROR,
-  SERVER_ERROR,
   USER_NOT_FOUND,
+  NO_USERS,
 } = require('../utils/error_messages');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find()
     .then((data) => {
+      if (!data) {
+        throw new NotFound(NO_USERS);
+      }
       res.send(data);
     })
-    .catch(() => {
-      res.status(500).send(SERVER_ERROR);
+    .catch((err) => {
+      next(err);
     });
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-        res.status(404).send(USER_NOT_FOUND);
-      } else {
-        res.send(user);
+        throw new NotFound(USER_NOT_FOUND);
       }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send(USER_NOT_FOUND);
-      } else {
-        res.status(500).send(SERVER_ERROR);
-      }
-    });
-};
-
-const postUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send(VALIDATION_ERROR);
-      } else {
-        res.status(500).send(SERVER_ERROR);
-      }
+      next(err);
     });
 };
 
-const updateUserInfo = (req, res) => {
+const getMe = (req, res, next) => {
+  const { _id } = req.user;
+
+  User.findById(_id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFound(USER_NOT_FOUND);
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -60,21 +58,17 @@ const updateUserInfo = (req, res) => {
     },
   )
     .then((user) => {
+      if (!user) {
+        throw new NotFound(USER_NOT_FOUND);
+      }
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send(VALIDATION_ERROR);
-      }
-      if (err.name === 'CastError') {
-        res.status(404).send(USER_NOT_FOUND);
-      } else {
-        res.status(500).send(SERVER_ERROR);
-      }
+      next(err);
     });
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -85,24 +79,20 @@ const updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
+      if (!user) {
+        throw new NotFound(USER_NOT_FOUND);
+      }
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send(VALIDATION_ERROR);
-      }
-      if (err.name === 'CastError') {
-        res.status(404).send(USER_NOT_FOUND);
-      } else {
-        res.status(500).send(SERVER_ERROR);
-      }
+      next(err);
     });
 };
 
 module.exports = {
   getUsers,
   getUserById,
-  postUser,
   updateUserInfo,
   updateUserAvatar,
+  getMe,
 };
