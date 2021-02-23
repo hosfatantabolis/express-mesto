@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler.js');
@@ -22,7 +23,7 @@ const router = require('./routes/index.js');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-
+app.use(cors());
 // app.use((req, res, next) => {
 //   req.user = {
 //     _id: '601335c5ee23ea362c89dc18',
@@ -32,13 +33,6 @@ const app = express();
 // });
 
 app.use(bodyParser.json());
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-  next();
-});
 
 app.use(requestLogger);
 app.use(router);
