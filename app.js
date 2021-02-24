@@ -24,17 +24,17 @@ const router = require('./routes/index.js');
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cors());
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '601335c5ee23ea362c89dc18',
-//   };
-
-//   next();
-// });
 
 app.use(bodyParser.json());
 
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(router);
 app.use(errorLogger);
 app.use(errorHandler);
