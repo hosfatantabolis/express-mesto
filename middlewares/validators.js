@@ -4,12 +4,12 @@ const validator = require('validator');
 const signupValidator = celebrate({
   body: {
     name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимально 2 символа',
-      'string.max': 'Максимум 30 символов',
+      'string.min': 'Имя: Минимально 2 символа',
+      'string.max': 'Имя: Максимум 30 символов',
     }),
     about: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимально 2 символа',
-      'string.max': 'Максимум 30 символов',
+      'string.min': 'Профессия: Минимально 2 символа',
+      'string.max': 'Профессия: Максимум 30 символов',
     }),
     avatar: Joi.string().custom((value, helper) => {
       if (validator.isURL(value)) {
@@ -26,7 +26,7 @@ const signupValidator = celebrate({
       'string.empty': 'E-mail - это обязательное поле',
     }),
     password: Joi.string().required().min(6).messages({
-      'string.min': 'Минимально 6 символов',
+      'string.min': 'Пароль: Минимально 6 символов',
       'string.empty': 'Пароль - это обязательное поле',
     }),
   },
@@ -52,8 +52,8 @@ const loginValidator = celebrate({
 const postCardValidator = celebrate({
   body: {
     name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимально 2 символа',
-      'string.max': 'Максимум 30 символов',
+      'string.min': 'Имя: Минимально 2 символа',
+      'string.max': 'Имя: Максимум 30 символов',
     }),
     link: Joi.string().custom((value, helper) => {
       if (validator.isURL(value)) {
@@ -76,9 +76,12 @@ const deleteCardValidator = celebrate({
     }),
   }).unknown(true),
   params: {
-    id: Joi.string().required().messages({
-      'any.required': 'Не передан ID карточки',
-    }),
+    id: Joi.string().required().length(24).hex()
+      .messages({
+        'any.required': 'Не передан ID карточки',
+        'string.hex': 'Передан неверный ID карточки',
+        'string.length': 'Передан неверный ID карточки',
+      }),
   },
 });
 
@@ -89,9 +92,12 @@ const likeAndDislikeCardValidator = celebrate({
     }),
   }).unknown(true),
   params: {
-    id: Joi.string().required().messages({
-      'any.required': 'Не передан ID карточки',
-    }),
+    id: Joi.string().required().length(24).hex()
+      .messages({
+        'any.required': 'Не передан ID карточки',
+        'string.hex': 'Передан неверный ID карточки',
+        'string.length': 'Передан неверный ID карточки',
+      }),
   },
 });
 
@@ -110,9 +116,12 @@ const getUsersByIdValidator = celebrate({
     }),
   }).unknown(true),
   params: {
-    id: Joi.string().required().messages({
-      'any.required': 'Не передан ID пользователя',
-    }),
+    id: Joi.string().required().length(24).hex()
+      .messages({
+        'any.required': 'Не передан ID пользователя',
+        'string.hex': 'Передан неверный ID пользователя',
+        'string.length': 'Передан неверный ID пользователя',
+      }),
   },
 });
 
@@ -131,14 +140,20 @@ const updateUserInfoValidator = celebrate({
     }),
   }).unknown(true),
   body: {
-    name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимально 2 символа',
-      'string.max': 'Максимум 30 символов',
-    }),
-    about: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимально 2 символа',
-      'string.max': 'Максимум 30 символов',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Имя: Минимально 2 символа',
+        'string.max': 'Имя: Максимум 30 символов',
+        'string.empty': 'Имя - обязательное поле',
+        'any.required': 'Имя - обязательное поле',
+      }),
+    about: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Профессия: Минимально 2 символа',
+        'string.max': 'Профессия: Максимум 30 символов',
+        'string.empty': 'Профессия - обязательное поле',
+        'any.required': 'Профессия - обязательное поле',
+      }),
   },
 });
 
@@ -149,11 +164,14 @@ const updateAvatarValidator = celebrate({
     }),
   }).unknown(true),
   body: {
-    avatar: Joi.string().custom((value, helper) => {
+    avatar: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
       return helper.message('Некорректная ссылка');
+    }).messages({
+      'string.empty': 'Аватар - обязательное поле',
+      'any.required': 'Аватар - обязательное поле',
     }),
   },
 });

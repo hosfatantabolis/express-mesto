@@ -7,9 +7,8 @@ const invalidRouter = require('./invalidURL.js');
 const auth = require('../middlewares/auth.js');
 
 router.use('/', authRouter);
-router.use(auth);
-router.use('/cards', cardRouter);
-router.use('/users', usersRouter);
+router.use('/cards', auth, cardRouter);
+router.use('/users', auth, usersRouter);
 router.use('/*', invalidRouter);
 
 module.exports = router;
